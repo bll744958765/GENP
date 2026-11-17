@@ -7,6 +7,19 @@ coordinate-and-covariate encoding. A two-way gate mixes the local expert
 representations. A single mixture density head outputs Gaussian means, positive
 standard deviations, and normalized weights.
 
+## Repository layout
+
+| Directory | Contents |
+| --- | --- |
+| gecnp/ | Model architecture and matched GECNP controls, data preparation, shared training utilities and predictive scoring. |
+| baselines/ | CNP, ANP, SMACNP, Fourier and transformer adaptations, KCN, and kriging. The _vendor/ directory contains the imported upstream cores used by these methods. |
+| experiments/ | Training, sensitivity runs, independent synthetic evaluation and result summaries. |
+| figures/ | Plotting scripts that read locally generated data and experiment archives. |
+
+Run the module commands below from the repository root. Source fingerprints
+include the new file paths. Use a fresh results directory when running this
+layout to keep its checkpoints and ledgers separate from earlier releases.
+
 ## Installation
 
 Use Python 3.9 or later in a fresh environment. The manuscript runs used Python
@@ -16,8 +29,8 @@ Use Python 3.9 or later in a fresh environment. The manuscript runs used Python
 python -m venv .venv
 # Activate .venv for your shell, then:
 python -m pip install -r requirements.txt
-python run_final_experiments.py
-python finalize_final_results.py --self-check
+python -m experiments.train
+python -m experiments.summarize_main --self-check
 ~~~
 
 The first command in the last two lines is a dry run listing the 790 reference
@@ -71,30 +84,30 @@ Run from the repository root. First check an experiment selection, then add
 --execute to start. For example, a full-budget single-seed California run:
 
 ~~~bash
-python run_final_experiments.py --datasets california --modes random --variants final equal_gate single_gaussian cosine spherical --seeds 1
-python run_final_experiments.py --datasets california --modes random --variants final equal_gate single_gaussian cosine spherical --seeds 1 --execute
+python -m experiments.train --datasets california --modes random --variants final equal_gate single_gaussian cosine spherical --seeds 1
+python -m experiments.train --datasets california --modes random --variants final equal_gate single_gaussian cosine spherical --seeds 1 --execute
 ~~~
 
 The following commands run the full comparison suite in dependency order.
 The first training command is computationally expensive even on CPU workers.
 
 ~~~bash
-python run_final_experiments.py --execute
-python finalize_final_results.py
-python run_kriging_baselines.py
-python summarize_supplemental.py --kriging-only
-python run_reference_np.py --suite
-python run_kcn_baseline.py
-python summarize_comparisons.py
+python -m experiments.train --execute
+python -m experiments.summarize_main
+python -m baselines.kriging
+python -m experiments.summarize_supplemental --kriging-only
+python -m experiments.reference_np --suite
+python -m baselines.kcn
+python -m experiments.summarize_comparisons
 ~~~
 
 | Runner | Variants and scope |
 | --- | --- |
-| run_final_experiments.py | Reference GECNP; equal gate; single Gaussian; cosine attribute attention; California-only spherical distance; standard and parameter-matched CNP with one and two components; covariate-aware SFConvCNP, SFVConvCNP and TE-ISTNP. |
-| run_kriging_baselines.py | Ordinary and regression kriging on the same split and evaluation records. |
-| run_reference_np.py | Standard ANP and SMACNP under the shared episode budget. To run just one job, supply dataset, mode, variant (anp_standard or smacnp), and seed, in that order. |
-| run_kcn_baseline.py | Query-centered weighted graph convolution, five spatial neighbors, masked query label, Gaussian predictive head. |
-| run_sensitivity_suite.py | K=3 and K=4, Adam learning rate 0.0003 and 0.003, and hidden widths 32 and 128. K=1 is the single_gaussian control above. |
+| experiments/train.py | Reference GECNP; equal gate; single Gaussian; cosine attribute attention; California-only spherical distance; standard and parameter-matched CNP with one and two components; covariate-aware SFConvCNP, SFVConvCNP and TE-ISTNP. |
+| baselines/kriging.py | Ordinary and regression kriging on the same split and evaluation records. |
+| experiments/reference_np.py | Standard ANP and SMACNP under the shared episode budget. To run just one job, supply dataset, mode, variant (anp_standard or smacnp), and seed, in that order. |
+| baselines/kcn.py | Query-centered weighted graph convolution, five spatial neighbors, masked query label, Gaussian predictive head. |
+| experiments/sensitivity.py | K=3 and K=4, Adam learning rate 0.0003 and 0.003, and hidden widths 32 and 128. K=1 is the single_gaussian control above. |
 
 The supplemental baseline runners use the matching reference GECNP artifacts
 to verify identical test IDs and, for neural baselines, episode hashes. Run
@@ -105,16 +118,16 @@ or hyperparameters, and assign each dataset to at most one worker.
 ### Hyperparameter sensitivity and mechanism diagnostics
 
 ~~~bash
-python run_sensitivity_suite.py --seeds 1 2 3 4 5 6 7 8 9 10
-python summarize_supplemental.py --seeds 10
-python plot_supplemental_results.py --component-ablations
-python plot_supplemental_results.py --cnp-extensions
-python plot_supplemental_results.py
-python plot_context_disagreement.py --collect
-python evaluate_independent_synthetic.py --generate
-python evaluate_independent_synthetic.py
-python plot_benchmark_overview.py
-python plot_predictive_density.py
+python -m experiments.sensitivity --suite --seeds 1 2 3 4 5 6 7 8 9 10
+python -m experiments.summarize_supplemental --seeds 10
+python -m figures.ablations_and_maps --component-ablations
+python -m figures.ablations_and_maps --cnp-extensions
+python -m figures.ablations_and_maps
+python -m figures.context_disagreement --collect
+python -m experiments.independent_synthetic --generate
+python -m experiments.independent_synthetic
+python -m figures.benchmark
+python -m figures.predictive_density
 ~~~
 
 Sensitivity runs change one factor at a time from K=2, learning rate 0.001,

@@ -1,7 +1,7 @@
 {
   "status": "author_selected_frozen_architecture",
   "decision_date": "2026-11-03",
-  "main_class": "final_model.FinalGECNP",
+  "main_class": "gecnp.model.FinalGECNP",
   "main_variant": "final",
   "geometry": "standardized_coordinate_euclidean",
   "spatial_kernel": "gaussian",
@@ -44,8 +44,8 @@
     "cnp_two_matched": "mean CNP with encoder width matching final model parameter count within 1%",
     "cnp_single_matched": "mean CNP with encoder width matching final model parameter count within 1%"
   },
-  "existing_checkpoint_pattern": "results/geographic_kernel_pilot/{mode}/std_gauss_l1/seed_{seed}_best.pt",
-  "source_sha256": {
+  "historical_pilot_checkpoint_pattern": "results/geographic_kernel_pilot/{mode}/std_gauss_l1/seed_{seed}_best.pt",
+  "historical_source_sha256": {
     "analyze_common_local.py": "0bb3150b49d3a4906d5897d700cec75931d8853d3d3f2f14683959d9b3f4baca",
     "analyze_geographic_kernel_pilot.py": "8c00581ef3622dbf1d9d00f11cbb3f5259712fa726f811d86e1c7ce526aec244",
     "analyze_specialized_pilot.py": "7784ffbf02390ef3c30be21ad78cd685fd8831d3cc74adca66c61c29e4ccd69e",
@@ -77,7 +77,7 @@
     "summarize_results.py": "f31fb7c7625bd5cfda8c82cf5bb67b6f28fe6092d46b22faff2e813276460d96",
     "test_model.py": "5df79a114b4a0b8f4db8ca07efaae2120aa5899c4dc6e4d1a9a161ad82304c9c"
   },
-  "note": "data.py comment corrected; numerical preprocessing/split behavior is unchanged. Historical experiment fingerprints remain historical.",
+  "note": "The historical hashes identify the research workspace before release packaging. The training runner computes fingerprints for the current release.",
   "sampler_fix": "Coincident spatial quantiles fall back to disjoint random sampling; verified identical-coordinate regression test. Historical fingerprints remain unchanged.",
   "attribute_attention_name": "nonnegative weighted attribute-distance attention",
   "attribute_attention_definition": {
