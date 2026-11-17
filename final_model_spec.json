@@ -1,0 +1,125 @@
+{
+  "status": "author_selected_frozen_architecture",
+  "decision_date": "2026-11-03",
+  "main_class": "final_model.FinalGECNP",
+  "main_variant": "final",
+  "geometry": "standardized_coordinate_euclidean",
+  "spatial_kernel": "gaussian",
+  "attribute_kernel": "nonnegative_weighted_L1_exponential",
+  "attribute_weights": "softmax(theta)",
+  "shared_base": true,
+  "expert_inputs": {
+    "spatial": [
+      "coordinates",
+      "observed_context_response"
+    ],
+    "attribute": [
+      "covariates",
+      "observed_context_response"
+    ],
+    "common": [
+      "coordinates",
+      "covariates"
+    ]
+  },
+  "common_aggregation": "mean_before_query_fusion",
+  "local_gate": "two-way spatial/attribute representation softmax",
+  "information_fusion": "MLP(concat(common_mean,gated_local_representation,query_embedding))",
+  "prediction_head": "one_MDN",
+  "gaussian_components": 2,
+  "scale_floor_standardized": 0.001,
+  "hidden": 64,
+  "learning_rate": 0.001,
+  "epochs": 300,
+  "episodes_per_epoch": 30,
+  "gradient_clip": 5,
+  "artifact_scope": "Final full-budget experiments are separate from all 20x5 development results. No completed full-budget result is claimed before its ledger row exists.",
+  "ablations": {
+    "spherical": "same_gaussian_and_weighted_L1_California_only",
+    "cosine": "same_standardized_Gaussian_with_query_key_cosine",
+    "equal_gate": "implemented and preflight-checked; requires final ledger results",
+    "single_gaussian": "same final encoder and head trunk; preflight-checked",
+    "cnp_two": "conventional mean CNP, same two-component MDN head family",
+    "cnp_single": "conventional mean CNP, single Gaussian head",
+    "cnp_two_matched": "mean CNP with encoder width matching final model parameter count within 1%",
+    "cnp_single_matched": "mean CNP with encoder width matching final model parameter count within 1%"
+  },
+  "existing_checkpoint_pattern": "results/geographic_kernel_pilot/{mode}/std_gauss_l1/seed_{seed}_best.pt",
+  "source_sha256": {
+    "analyze_common_local.py": "0bb3150b49d3a4906d5897d700cec75931d8853d3d3f2f14683959d9b3f4baca",
+    "analyze_geographic_kernel_pilot.py": "8c00581ef3622dbf1d9d00f11cbb3f5259712fa726f811d86e1c7ce526aec244",
+    "analyze_specialized_pilot.py": "7784ffbf02390ef3c30be21ad78cd685fd8831d3cc74adca66c61c29e4ccd69e",
+    "audit_final_model.py": "0225cce373fd98455a0767a713ac7e3e5b1908bec30e8c8f363a19dbde704827",
+    "calibration.py": "96e0cf46133cce6c508bdd9de9aa264ec44f84279990ca9e355c9604d767d5f5",
+    "check_common_local.py": "2a455645c39743746239f0b8b090b09276e47fe7935f6e7f1f8e772f8d950a12",
+    "check_geographic_kernels.py": "e15ba3f4043b0b8f1425f69b07e6226e73468c6ad99dbe5d85637b21f097b5d6",
+    "check_specialized_inputs.py": "9cc482f9a886c3c71209644c4a6f5697b8f408f2d05b8f76e704c70082d85f7f",
+    "data.py": "7d9b90d8dbefddfa95325a3aae239b5492d69fba9cdca85f60a8747703414090",
+    "diagnose_geographic_kernel_use.py": "07944f29745445b1c4ba3cd497661af85a7c0b6f033f325474a0200ecd792119",
+    "final_controls.py": "25976e29453e0cc198f622c37a7ad16d45f8ff6005eda2be317ab132ab2f9656",
+    "final_data.py": "68fa27152b665ad4bac078528d584c21b3409df7d9165ac19ff03541ac8fe4b7",
+    "final_model.py": "03faa5c1cfebfc9b7b0528f872742fe7fa8bd08b96fcf5096bc9209c7ae9a178",
+    "geographic_kernel_model.py": "43eb1c81ed79e5ae06d14f30e9da68fae04a5fcd514232ee824c179f61685711",
+    "load_geographic_candidate.py": "e4963ab161bd67be3e6c1bbcd056d57da4e6fd7dac8d6c3ac839c728e5a391df",
+    "mechanism_diagnostics.py": "d2a05a75611969731ad6c7282033f35c18014cb1a2b9bc3deaa3d799975b1ac1",
+    "model.py": "6bfbc3662cbac17bf3d0102ef220ac23a077d4d411316890ad4347202c6e27cb",
+    "paired_tests.py": "8687b20ec731477206b846c19e881c294704f4fdbb594db1f516277f59ceb157",
+    "ranked_models.py": "280aeeb737cebd4559af738425a41826f31077e1820a62d3fd45ca08d2cf0fb5",
+    "recent_baselines.py": "d27e3d1ec824aa2e58d27b082688d78c0f0749cc0c0ca72f310a0ddd4dd15a85",
+    "run_experiments.py": "88821b8c414b5c22a0fe0c98133516dbb01cfe6b3d86c51f654dac6c4ded8005",
+    "run_final_experiments.py": "ecd8a516c0864da401377da5a8c2d42e91032a9163e5835455fc39f4c737e96d",
+    "run_geographic_kernel_pilot.py": "4ff67c0e81df73190b8774b5baacfe2a1bfca7a79c53be1231a045b50e3087bd",
+    "spatial_calibration_final.py": "37b49ceff1b4e820bd6829cec7da3b984e3ef54de9450d2148d3abdc99329fe1",
+    "spatial_framework_pilot.py": "31556977511f5b1f68f4a69e3e3cb47ba19cb4121a78051c8e06880ba32196f4",
+    "spatial_pilot.py": "5c2e9c77ab0252af5ffb3ec4bfdf57b95f34ef8d4bd4b2769493ba20e3e66c91",
+    "specialized_model.py": "fabb656013526190d6dc25615f858fcf8ed76d52349d3dae8e7f76b5df19ed1a",
+    "summarize_all_experiments.py": "ce6b9359495eb9d1e7664498f465da3fffafb6c1d355522b219cc047cd14fca4",
+    "summarize_results.py": "f31fb7c7625bd5cfda8c82cf5bb67b6f28fe6092d46b22faff2e813276460d96",
+    "test_model.py": "5df79a114b4a0b8f4db8ca07efaae2120aa5899c4dc6e4d1a9a161ad82304c9c"
+  },
+  "note": "data.py comment corrected; numerical preprocessing/split behavior is unchanged. Historical experiment fingerprints remain historical.",
+  "sampler_fix": "Coincident spatial quantiles fall back to disjoint random sampling; verified identical-coordinate regression test. Historical fingerprints remain unchanged.",
+  "attribute_attention_name": "nonnegative weighted attribute-distance attention",
+  "attribute_attention_definition": {
+    "feature_weight_mode": "global_trainable_simplex",
+    "feature_weights": "w_l = softmax(theta)_l",
+    "distance": "D_qi = sum_l w_l * abs(z_ql - z_il)",
+    "attention_score": "e_qi = -D_qi / tau_a",
+    "context_attention": "a_qi = softmax_i(e_qi)",
+    "message": "m_q = sum_i a_qi * v_i",
+    "query_conditioned_feature_weights": false,
+    "context_attention_is_query_and_context_dependent": true
+  },
+  "planned_ablations": {
+    "query_conditioned_attribute_weights": {
+      "status": "recorded_for_future_ablation_not_implemented_or_trained",
+      "proposed_feature_weights": "w_ql = softmax_l(f_feat(x_q))",
+      "input": "query_covariates_only",
+      "main_model": false,
+      "interpretation": "Positive query-specific feature weights retain fixed-query distance monotonicity; raw scores generally cease to be symmetric.",
+      "required_comparison": "Global versus query-conditioned feature weights under matched splits, optimization budget and core initialization; report capacity, context sensitivity and predictive metrics."
+    }
+  },
+  "documentation_update": "2026-11-03: distance attention terminology clarified; no forward formula, trainable tensor or checkpoint format change.",
+  "independent_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "optimizer_steps_per_run": 9000,
+  "preprocessing": "final-v2-context-onehot",
+  "final_study_results_directory": "results/final_300e30ep",
+  "variance_computation": "sum_k pi_k*(sigma_k^2+(mu_k-mixture_mean)^2), mathematically equal to total variance and stable against subtractive cancellation",
+  "recent_baselines": {
+    "sfconvcnp": "ICML 2026; official numerical core plus explicit covariate token adaptation",
+    "sfvconvcnp": "ICML 2026; official numerical core plus explicit covariate token adaptation",
+    "te_istnp": "ICML 2024; reference core distributed in the 2026 repository; covariate token adaptation"
+  }
+}
